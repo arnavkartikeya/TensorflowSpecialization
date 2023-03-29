@@ -1,0 +1,12 @@
+This document describes the siamese network from this paper: https://ieeexplore.ieee.org/document/1467314
+
+The siamese network's objective is to determine the difference between two inputvalues X1 and X2. In this specific case, it will be for the fashion-mnist dataset. 
+
+To do so, the objective is to map X1 and X2 into a space G_w(X1) and G_w(X2) such that the euclidian distance between G_w(X1) and G_w(X2) (||G_w(X1) - G_w(X2)||) represent the similarity between the two inputs X1 and X2. G_w can be a simpleneural network or a convolutional neural network. 
+
+The data for this task has pairs (X1, X2) and an output Y. Y is a discrete value, when it is 0 the values X1 and X2 are similar, when it is 1, they are not. For the fashion-mnist dataset, Y is 0 when the inputs X1 and X2 are from the same class. 
+
+The architecture of the model is then to run two identical models in parallel, one taking X1 and the other X2. X1 and X2 are then transformed into vectors in the space G_w(X) and a final layer takes the euclidian distance between the the two as the final output. A larger value represents less similarity and a smaller one represents more. The output is not bounded to an output of [0, 1] and instead can extend beyond one.
+
+To train the network, the loss function is defined as a contrastive pairwise loss function. It is defined as L(W, X1, X2, Y) = (1-Y)(||X1 - X2||) + (Y)(max(0, m - ||X1 - X2||). When Y is 0 (the pairs are similar), then the loss function reduces to the distance between the two values X1 and X2. When Y is 1 (the pairs are not similar) then the loss function is also the distance between X1 and X2, but beyond some margin m, the value simply becomes 0.  
+
